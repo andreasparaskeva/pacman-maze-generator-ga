@@ -75,12 +75,6 @@ invalid_3d = [
     ['%', '%', '.'],
     ['.', '%', '.'],
   ],
-  # # 5
-  # [
-  #   ['.', '%', '%'],
-  #   ['.', '%', '.'],
-  #   ['%', '%', '.'],
-  # ],
 ]
 
 invalid_2x3 = [
@@ -107,6 +101,7 @@ invalid_3x2 = [
   ]
 ]
 
+# valid blocks
 Blocks = [
   # 1
   [
@@ -415,8 +410,6 @@ def finalize_maze(d):
     r, c = indices_list[indices[i]]
     d[r,c] = 'o'
 
-
-    
   with open(f'examples/out_{time.time()}.lay', 'w') as f:
     for row in range(d.shape[0]):
       line = ''.join(d[row])

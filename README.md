@@ -5,10 +5,10 @@ _____
 
 ## Run
 
-    ~~~
-    python genetic_algorithm_multi.py
-    ~~~
-    Will run multithreading approach to generate 4 new layouts saved to the examples folder
+```
+python genetic_algorithm_multi.py
+```
+Will run multithreading approach to generate 4 new layouts saved to the examples folder
 _____
 
 ## Population

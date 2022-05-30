@@ -47,3 +47,4 @@ Minimization problem, until fitness is zero.
 _____
 
 ## Example outputs
+<img src="images/samples.png" alt="block fitness" />

@@ -13,6 +13,7 @@ class Mutation():
     return f'mut-dynamic' if self.is_dynamic else f'mut-{self.pm}'
 
   def apply(self, individual):
+    s_pm = 0.05
     mutated = individual.copy_genotype()
     rows = mutated.genotype.grid.shape[0]
     cols = mutated.genotype.grid.shape[1]
@@ -23,7 +24,7 @@ class Mutation():
       for c in range(0, cols-2, 3):     
         # check if a mutation will take place
         # print((self.pm * (individual.block_fitness[pos]/individual.fitness)))
-        if rand() < (self.pm * ((individual.block_fitness[pos]+0.05)/individual.fitness)):
+        if rand() < (self.pm * ((individual.block_fitness[pos]+s_pm)/individual.fitness)):
           # change the block to randonly one other choice
           unique_valid_3d = helper.get_valid()
           unique_valid_3d_list = [np.array(unique).reshape(3,3) for unique in list(unique_valid_3d)]

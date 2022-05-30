@@ -1,6 +1,7 @@
 import sys
 import time
 import numpy as np
+import model
 from numpy.random import rand
 from typing import List
 from model import Population, Individual
@@ -9,7 +10,6 @@ from crossover import UniformCrossover, Crossover
 from selection import ProportionalSelection, TournamentSelection, Selection
 from common import create_population
 from multiprocessing import Pool
-import model
 from utils.ea_helper import finalize_maze
 
 
@@ -103,7 +103,7 @@ def execute_experiment(configuration):
     crossover=crossover,
     mutation=mutation,
     pop_size=population_size,
-    shape=(9,6),
+    shape=(12,9),
   )
 
 if __name__ == '__main__':

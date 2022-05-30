@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 import numpy as np
-from maze_EA_Generator import MazeGenerator
+from maze import MazeGenerator
 import utils.ea_helper as helper
 from utils.ea_helper import column, get_positions
 from utils.ea_helper import invalid_2x3, invalid_3x2

@@ -1,6 +1,6 @@
 import numpy as np
 from model import Population, Individual
-from maze_EA_Generator import MazeGenerator
+from maze import MazeGenerator
 
 def create_population(pop_size, shape) -> Population:
   individuals = []

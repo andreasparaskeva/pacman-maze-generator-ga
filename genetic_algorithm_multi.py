@@ -14,12 +14,8 @@ from utils.ea_helper import finalize_maze
 
 
 MAZE_GEN_CONFIGURATION = [
-  (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 64),
-  # (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
-  # (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
-  # (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
+  (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
 ]
-
 
 def offsprings_from(pairs, crossover, mutation: Mutation, fitnesses) -> List[Individual]:
   offsprings = list()
@@ -103,13 +99,13 @@ def execute_experiment(configuration):
     crossover=crossover,
     mutation=mutation,
     pop_size=population_size,
-    shape=(12,9),
+    shape=(9,9),
   )
 
 if __name__ == '__main__':
 
   with Pool(8) as p:
-    p.map(execute_experiment, MAZE_GEN_CONFIGURATION*2)
+    p.map(execute_experiment, MAZE_GEN_CONFIGURATION*4)
 
 
 

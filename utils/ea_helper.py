@@ -284,7 +284,6 @@ def lookahead(iterable):
     yield last, False
 
 
-
 def cornerCase(d):
   if d[2, 2] == '%' and d[2,3] == '.' and d[3,2] == '.':
     d[1,2] = '%'
@@ -413,7 +412,7 @@ def finalize_maze(d):
   # saving the output file
   _, _, files = next(os.walk("./examples"))
   file_count = len(files)
-  with open(f'examples/out_{d.shape[0]},{d.shape[1]}{file_count}.lay', 'w') as f:
+  with open(f'examples/{file_count}_out_({d.shape[0]},{d.shape[1]}).lay', 'w') as f:
     for row in range(d.shape[0]):
       line = ''.join(d[row])
       f.write(f'{line}\n')

@@ -47,4 +47,6 @@ Minimization problem, until fitness is zero.
 _____
 
 ## Example outputs
+The outputs layouts were used in the Berkeley pacman implementation (adapted to Python 3 by [jspacc](https://github.com/jspacco/pac3man)). Screenshots were taken from the game instances using the generated layouts. 
+
 <img src="images/samples.png" alt="block fitness" />

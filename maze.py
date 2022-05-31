@@ -47,7 +47,6 @@ class MazeGenerator:
     # add a flipped symmetric copy to the right side
     flipped = np.fliplr(np.array(self.grid))
     # delete one column after mirroring and concatenate
-    # np.delete(self.grid, -1, axis=1)
     self.grid = np.concatenate((np.delete(self.grid, -1, axis=1), flipped), axis=1)
     # add walls to sides (padding)
     self.grid = np.pad(self.grid, ((1, 1),(1,1)), pad_with_wall)

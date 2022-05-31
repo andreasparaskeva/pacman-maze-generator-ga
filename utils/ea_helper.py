@@ -207,7 +207,6 @@ def get_invalid():
 
 def get_valid():
   all_valid_3d = list()
-
   for valid in Blocks:
     for function_call in block_combos:
       func_name = function_call.func_name
@@ -267,44 +266,43 @@ big_p_fix = [
       ['%', '%', '%']
 ]
 
-def lookahead(iterable):
-    """Pass through all values from the given iterable, augmented by the
-    information if there are more values to come after the current one
-    (True), or if it is the last value (False).
-    """
-    # Get an iterator and pull the first value.
-    it = iter(iterable)
-    last = next(it)
-    # Run the iterator to exhaustion (starting from the second value).
-    for val in it:
-        # Report the *previous* value (more to come).
-        yield last, True
-        last = val
-    # Report the last value.
-    yield last, False
-
+# Dead end block and fix
+fix_dead_end = [
+                ['%', '%'],
+                ['%', '%'],
+                ['%', '%']
+]
+dead_end = [
+                ['%', '%'],
+                ['%', '.'],
+                ['%', '%']
+]
 
 def cornerCase(d):
+  # top left corner
   if d[2, 2] == '%' and d[2,3] == '.' and d[3,2] == '.':
     d[1,2] = '%'
     d[1,1] = '%'
     d[2,1] = '%'
+
+  # top right corner
   if d[2, d.shape[1]-3] == '%' and d[2,d.shape[1]-4] == '.' and d[3,d.shape[1]-3] == '.':
     d[1,d.shape[1]-2] = '%'
     d[1,d.shape[1]-3] = '%'
     d[2,d.shape[1]-2] = '%'
 
+  # bottom left corner
   if d[d.shape[0]-3, 2] == '%' and d[d.shape[0]-3,3] == '.' and d[d.shape[0]-4,2] == '.':
     d[d.shape[0]-2,2] = '%'
     d[d.shape[0]-2,1] = '%'
     d[d.shape[0]-3,1] = '%'
 
+  # bottom right corner
   if d[d.shape[0]-3, d.shape[1]-3] == '%' and d[d.shape[0]-3,d.shape[1]-4] == '.' and d[d.shape[0]-4,d.shape[1]-3] == '.':
     d[d.shape[0]-2,d.shape[1]-2] = '%'
     d[d.shape[0]-2,d.shape[1]-3] = '%'
     d[d.shape[0]-3,d.shape[1]-2] = '%'
 
-#create function to calculate Manhattan distance 
 def manhattan(a, b):
     return sum(abs(val1-val2) for val1, val2 in zip(a,b))
 
@@ -321,18 +319,76 @@ def maxDist(points):
 
     return max_dist_points, idx
 
+def fix_side_dead_end(d):
+  # check left side
+  dead_end_flat = set(tuple(np.array(dead_end).flatten()))
+  for r in range(1, d.shape[0]-3):
+    curr = d[r:r+3, 0:2]
+    curr = tuple(np.array(curr).flatten())
+    if curr in dead_end_flat:
+      d[r:r+3, 0:2] = fix_dead_end
+
+  # check right side
+  dead_end_flat = set(tuple(np.fliplr(dead_end).flatten()))
+  for r in range(1, d.shape[0]-3):
+    curr = d[r:r+3, d.shape[1]-2:d.shape[1]]
+    curr = tuple(np.array(curr).flatten())
+    if curr in dead_end_flat:
+      d[r:r+3, d.shape[1]-2:d.shape[1]] = fix_dead_end
+
+  # check top side
+  dead_end_flat = set(tuple(np.array(dead_end).flatten()))
+  for c in range(2, d.shape[1]-4):
+    curr = d[0:2, c:c+3]
+    curr = tuple(np.array(curr).flatten())
+    if curr in dead_end_flat:
+      d[0:2, c:c+3] = fix_dead_end
+
+  # check bottom side
+  dead_end_flat = set(tuple(np.fliplr(dead_end).flatten()))
+  for c in range(2, d.shape[1]-4):
+    curr = d[d.shape[0]-4:d.shape[0]-1, c:c+3]
+    curr = tuple(np.array(curr).flatten())
+    if curr in dead_end_flat:
+      d[d.shape[0]-2:d.shape[0], c:c+3] = fix_dead_end
+
+def get_middle_point(column_size):
+  return column_size//2
+
+def fix_pi_middle(d):
+  # fix Pi shape |_|
+  for r in range(1, d.shape[0]-3):
+    # getting the next middle block (3x3).
+    middle_column_point = get_middle_point(column_size=d.shape[1])
+    curr = d[r:r+3, middle_column_point-1:middle_column_point+2]
+    curr = tuple(np.array(curr).flatten())
+    if curr == tuple(np.array(small_p).flatten()):
+      d[r:r+3, middle_column_point-1:middle_column_point+2] = small_p_fix
+    if curr == tuple(np.array(big_p).flatten()):
+      d[r:r+3, middle_column_point-1:middle_column_point+2] = big_p_fix
+    if curr == tuple(np.flipud(small_p).flatten()):
+      d[r:r+3, middle_column_point-1:middle_column_point+2] = np.flipud(small_p_fix)
+    if curr == tuple(np.flipud(big_p).flatten()):
+      d[r:r+3, middle_column_point-1:middle_column_point+2] = np.flipud(big_p_fix)
+
+def add_pacman_ghosts(d):
+  # add pacman and ghosts
+  row, col = np.where(d == '.')
+  indices_list = list(zip(row, col))
+  indices = np.random.choice(len(indices_list), 6)
+  indices_list = np.array(indices_list)
+  max_dist_points, idx = maxDist(indices_list[indices])
+  indices = np.delete(indices, idx)
+  rP, cP = max_dist_points[0]
+  rG, cG = max_dist_points[1]
+  d[rP,cP] = 'P'
+  d[rG,cG] = 'G'
+  for i in range(len(indices)):
+    r, c = indices_list[indices[i]]
+    d[r,c] = 'o'
+
 def finalize_maze(d):
-  d[d=='o'] ='.'
-  for c in range(1, d.shape[1]-1):
-    d[1,c]='%'
-  for r in range(2, d.shape[0]-1):
-    d[r,1] = '%'
-  for r in range(2, d.shape[0]-1):
-    d[r, d.shape[1]-2] = '%'
-  for c in range(2, d.shape[1]-2):
-    d[d.shape[0]-2,c] = '%'
-
-
+  # add food in inner wall were necessary
   for r in range(2, d.shape[0]-2):
     if d[r, d.shape[1]-3] == '%':
       d[r-1, d.shape[1]-2] = '.'
@@ -380,34 +436,12 @@ def finalize_maze(d):
 
   cornerCase(d)
 
-  # fix Pi shape |_|
+  fix_pi_middle(d)
+ 
+  fix_side_dead_end(d)
 
-  for r, has_more in lookahead(range(1, d.shape[0]-3)):
-    curr = d[r:r+3, d.shape[1]//2-1:d.shape[1]//2+2]
-    curr = tuple(np.array(curr).flatten())
-    if curr == tuple(np.array(small_p).flatten()):
-      d[r:r+3, d.shape[1]//2-1:d.shape[1]//2+2] = small_p_fix
-    if curr == tuple(np.array(big_p).flatten()):
-      d[r:r+3, d.shape[1]//2-1:d.shape[1]//2+2] = big_p_fix
-    if curr == tuple(np.flipud(small_p).flatten()):
-      d[r:r+3, d.shape[1]//2-1:d.shape[1]//2+2] = np.flipud(small_p_fix)
-    if curr == tuple(np.flipud(big_p).flatten()):
-      d[r:r+3, d.shape[1]//2-1:d.shape[1]//2+2] = np.flipud(big_p_fix)
+  add_pacman_ghosts(d)
 
-  # add pacman and ghosts
-  row, col = np.where(d == '.')
-  indices_list = list(zip(row, col))
-  indices = np.random.choice(len(indices_list), 6)
-  indices_list = np.array(indices_list)
-  max_dist_points, idx = maxDist(indices_list[indices])
-  indices = np.delete(indices, idx)
-  rP, cP = max_dist_points[0]
-  rG, cG = max_dist_points[1]
-  d[rP,cP] = 'P'
-  d[rG,cG] = 'G'
-  for i in range(len(indices)):
-    r, c = indices_list[indices[i]]
-    d[r,c] = 'o'
 
   # saving the output file
   _, _, files = next(os.walk("./examples"))

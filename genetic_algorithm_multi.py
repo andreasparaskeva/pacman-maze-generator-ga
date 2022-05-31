@@ -99,7 +99,7 @@ def execute_experiment(configuration):
     crossover=crossover,
     mutation=mutation,
     pop_size=population_size,
-    shape=(9,9),
+    shape=(9,6),
   )
 
 if __name__ == '__main__':

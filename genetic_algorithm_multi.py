@@ -14,10 +14,10 @@ from utils.ea_helper import finalize_maze
 
 
 MAZE_GEN_CONFIGURATION = [
-  (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
-  (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
-  (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
-  (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
+  (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 64),
+  # (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
+  # (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
+  # (UniformCrossover(pc=1.0), Mutation(pm=0.5, is_dynamic=False), ProportionalSelection(factor=1.0), 8),
 ]
 
 
@@ -55,7 +55,7 @@ def genetic_search(
   selection: Selection,
   crossover: Crossover,
   mutation: Mutation,
-  shape=(12,9,),
+  shape=(6,3,),
   pop_size=10,
 ):
   score = list()
@@ -108,9 +108,8 @@ def execute_experiment(configuration):
 
 if __name__ == '__main__':
 
-  # np.random.seed(101)
   with Pool(8) as p:
-    p.map(execute_experiment, MAZE_GEN_CONFIGURATION)
+    p.map(execute_experiment, MAZE_GEN_CONFIGURATION*2)
 
 
 

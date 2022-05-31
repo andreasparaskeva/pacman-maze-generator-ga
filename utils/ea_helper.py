@@ -1,6 +1,8 @@
-import numpy as np
-from collections import namedtuple
 import time
+import numpy as np
+import os, os.path
+from collections import namedtuple
+
 
 FunctionCall = namedtuple('FunctionCall', field_names=['func_name', 'parameters'])
 
@@ -399,8 +401,6 @@ def finalize_maze(d):
   indices = np.random.choice(len(indices_list), 6)
   indices_list = np.array(indices_list)
   max_dist_points, idx = maxDist(indices_list[indices])
-  print(indices_list[indices])
-  print(max_dist_points, idx)
   indices = np.delete(indices, idx)
   rP, cP = max_dist_points[0]
   rG, cG = max_dist_points[1]
@@ -410,7 +410,10 @@ def finalize_maze(d):
     r, c = indices_list[indices[i]]
     d[r,c] = 'o'
 
-  with open(f'examples/out_{time.time()}.lay', 'w') as f:
+  # saving the output file
+  _, _, files = next(os.walk("./examples"))
+  file_count = len(files)
+  with open(f'examples/out_{d.shape[0]},{d.shape[1]}{file_count}.lay', 'w') as f:
     for row in range(d.shape[0]):
       line = ''.join(d[row])
       f.write(f'{line}\n')
